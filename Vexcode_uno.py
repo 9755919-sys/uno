@@ -1,0 +1,568 @@
+#region VEXcode Generated Robot Configuration
+from vex import *
+import urandom
+import math
+
+# Brain should be defined by default
+brain = Brain()
+
+# Robot configuration code
+brain_inertial = Inertial()
+motor_1 = Motor(Ports.PORT1, False)
+motor_5 = Motor(Ports.PORT5, True)
+
+
+# Wait for sensor(s) to fully initialize
+wait(100, MSEC)
+
+# generating and setting random seed
+def initializeRandomSeed():
+    wait(100, MSEC)
+    xaxis = brain_inertial.acceleration(XAXIS) * 1000
+    yaxis = brain_inertial.acceleration(YAXIS) * 1000
+    zaxis = brain_inertial.acceleration(ZAXIS) * 1000
+    systemTime = brain.timer.system() * 100
+    urandom.seed(int(xaxis + yaxis + zaxis + systemTime)) 
+
+# Initialize random seed 
+initializeRandomSeed()
+
+#endregion VEXcode Generated Robot Configuration
+# ------------------------------------------
+# 
+#   Project:      VEXcode Project
+#   Author:       VEX
+#   Created:
+#   Description:  VEXcode EXP Python Project
+# 
+# ------------------------------------------
+
+# Library imports
+from vex import *
+
+# Begin project code
+
+# Create events
+FWD = Event()
+RT = Event ()
+LT = Event () 
+
+# Function 
+def when_started():
+    FWD.broadcast_and_wait()
+    LT.broadcast_and_wait()
+    FWD.broadcast_and_wait()
+    RT.broadcast_and_wait()
+    FWD.broadcast_and_wait()
+
+def motor1_move_forward():
+    motor_1.spin_for(FORWARD, 425, DEGREES)
+def motor5_move_forward():
+    motor_5.spin_for(FORWARD, 425, DEGREES)
+def motor1_turn_right():
+    motor_1.spin_for(FORWARD, 220, DEGREES)
+def motor5_turn_right():
+    motor_5.spin_for(REVERSE, 220, DEGREES)
+def motor_1_turn_left():
+    motor_1.spin_for(REVERSE, 220, DEGREES)
+def motor5_turn_left():
+    motor_5.spin_for(FORWARD, 220, DEGREES)
+
+def draw_card_full_screen(card_str, color_code):
+    brain.screen.clear_screen()
+    if color_code == 'R': brain.screen.set_fill_color(Color.RED)
+    elif color_code == 'G': brain.screen.set_fill_color(Color.GREEN)
+    elif color_code == 'B': brain.screen.set_fill_color(Color.BLUE)
+    elif color_code == 'Y': brain.screen.set_fill_color(Color.YELLOW)
+    else: brain.screen.set_fill_color(Color.BLACK)
+    brain.screen.set_pen_color(Color.WHITE)
+    for i in range(5):
+        brain.screen.draw_rectangle(0+i, 0+i, 159-(i*2), 107-(i*2))
+   
+    card = card_str[1:]
+    if card == "0":
+        for i in range(15):
+            brain.screen.draw_rectangle(20+i, 20+i, 119-(i*2), 67-(i*2))
+    elif card == "8":
+        for i in range(15):
+            brain.screen.draw_rectangle(20+i, 20+i, 119-(i*2), 67-(i*2))
+        for i in range(15):
+            brain.screen.draw_line(72+i, 20, 72+i, 85)
+    elif card == "1":
+        for i in range(15):
+            brain.screen.draw_line(20, 47+i, 139, 47+i)
+    elif card == "3":
+        for i in range(15):
+            brain.screen.draw_line(20, 20+i, 139, 20+i)
+            brain.screen.draw_line(20+i, 20, 20+i, 87)
+            brain.screen.draw_line(72+i, 20, 72+i, 87)
+            brain.screen.draw_line(125+i, 20, 125+i, 87)
+    elif card == "2":
+        for i in range(15):
+            brain.screen.draw_line(20+i, 20, 20+i, 87)
+            brain.screen.draw_line(20, 20+i, 72, 20+i)
+            brain.screen.draw_line(72+i, 20, 72+i, 87)
+            brain.screen.draw_line(72, 73+i, 139, 73+i)
+            brain.screen.draw_line(125+i, 20, 125+i, 87)
+        for i in range(3):
+            brain.screen.draw_line(145+i, 20, 145+i, 87)
+    elif card == "5":
+        for i in range(15):
+            brain.screen.draw_line(20+i, 20, 20+i, 87)
+            brain.screen.draw_line(20, 73+i, 72, 73+i)
+            brain.screen.draw_line(72+i, 20, 72+i, 87)
+            brain.screen.draw_line(72, 20+i, 139, 20+i)
+            brain.screen.draw_line(125+i, 20, 125+i, 87)
+        for i in range(3):
+            brain.screen.draw_line(145+i, 20, 145+i, 87)
+    elif card == "6":
+        for i in range(15):
+            brain.screen.draw_line(20+i, 20, 20+i, 87)
+            brain.screen.draw_line(20, 73+i, 72, 73+i)
+            brain.screen.draw_line(72+i, 20, 72+i, 87)
+            brain.screen.draw_line(72, 20+i, 139, 20+i)
+            brain.screen.draw_line(125+i, 20, 125+i, 87)
+            brain.screen.draw_line(72, 73+i, 139, 73+i)
+        for i in range(3):
+            brain.screen.draw_line(145+i, 20, 145+i, 87)
+    elif card == "9":
+        for i in range(15):
+            brain.screen.draw_line(20+i, 20, 20+i, 87)
+            brain.screen.draw_line(20, 20+i, 72, 20+i)
+            brain.screen.draw_line(20, 73+i, 72, 73+i)
+            brain.screen.draw_line(72+i, 20, 72+i, 87)
+            brain.screen.draw_line(72, 20+i, 139, 20+i)
+            brain.screen.draw_line(125+i, 20, 125+i, 87)
+        for i in range(3):
+            brain.screen.draw_line(145+i, 20, 145+i, 87)
+    elif card == "4" and "D" not in card_str:
+        for i in range(15):
+            brain.screen.draw_line(20, 20+i, 72, 20+i)
+            brain.screen.draw_line(20, 73+i, 72, 73+i)
+            brain.screen.draw_line(72+i, 20, 72+i, 87)
+            brain.screen.draw_line(72, 20+i, 139, 20+i)
+    elif card == "7":
+        for i in range(15):
+            brain.screen.draw_line(20, 20+i, 139, 20+i)
+            brain.screen.draw_line(20+i, 20, 20+i, 87)
+    elif card == "Rv":
+        for i in range(15):
+            brain.screen.draw_line(62+i, 30, 62+i, 87)
+            brain.screen.draw_line(69, 20, 52+i, 40)
+            brain.screen.draw_line(69, 20, 82-i, 40)
+            brain.screen.draw_line(82+i, 20, 82+i, 77)
+            brain.screen.draw_line(89, 87, 74+i, 67)
+            brain.screen.draw_line(89, 87, 104-i, 67)
+    elif card == "S":
+        for i in range(15):
+            brain.screen.draw_rectangle(40+i, 20+i, 82-(i*2), 67-(i*2))
+        for i in range(15):
+            brain.screen.draw_line(52+i, 20, 92+i, 80)
+    elif card == "D2":
+        brain.screen.set_fill_color(Color.WHITE)
+        for i in range(40):
+            brain.screen.draw_circle(60+i, 42+(i/2), 30)
+        if color_code == 'R': brain.screen.set_fill_color(Color.RED)
+        elif color_code == 'G': brain.screen.set_fill_color(Color.GREEN)
+        elif color_code == 'B': brain.screen.set_fill_color(Color.BLUE)
+        elif color_code == 'Y': brain.screen.set_fill_color(Color.YELLOW)
+        brain.screen.draw_rectangle(47, 32, 40, 25)
+        brain.screen.draw_rectangle(73, 52, 40, 25)
+        for i in range(5):
+            brain.screen.draw_line(18+i, 85, 18+i, 95)
+            brain.screen.draw_line(14, 88+i, 26, 88+i)
+            brain.screen.draw_line(10+i, 66, 10+i, 79)
+            brain.screen.draw_line(10, 66+i, 20, 66+i)
+            brain.screen.draw_line(18+i, 66, 18+i, 79)
+            brain.screen.draw_line(20, 75+i, 30, 75+i)
+            brain.screen.draw_line(26+i, 66, 26+i, 79)
+
+            brain.screen.draw_line(159-18-i, 107-85, 159-18-i, 107-95)
+            brain.screen.draw_line(159-14, 107-88-i, 159-26, 107-88-i)
+            brain.screen.draw_line(159-10-i, 107-66, 159-10-i, 107-79)
+            brain.screen.draw_line(159-10, 107-66-i, 159-20, 107-66-i)
+            brain.screen.draw_line(159-18-i, 107-66, 159-18-i, 107-79)
+            brain.screen.draw_line(159-20, 107-75-i, 159-30, 107-75-i)
+            brain.screen.draw_line(159-26-i, 107-66, 159-26-i, 107-79)
+    elif card_str == "W":
+        brain.screen.set_fill_color(Color.BLUE)
+        brain.screen.draw_rectangle(50, 20, 30, 32)
+        brain.screen.set_fill_color(Color.RED)
+        brain.screen.draw_rectangle(50, 52, 30, 32)
+        brain.screen.set_fill_color(Color.GREEN)
+        brain.screen.draw_rectangle(80, 20, 30, 32)
+        brain.screen.set_fill_color(Color.YELLOW)
+        brain.screen.draw_rectangle(80, 52, 30, 32)
+        brain.screen.set_fill_color(Color.TRANSPARENT)
+        brain.screen.set_pen_width(3)
+        for i in range(15):
+            brain.screen.draw_circle(80, 52, 30-(i/5))
+        brain.screen.set_pen_color(Color.BLACK)
+        for i in range(65):
+            brain.screen.draw_circle(80, 52, 31+(i/5))
+        brain.screen.set_pen_width(1)
+    elif card_str == "D4":
+        brain.screen.set_fill_color(Color.YELLOW)
+        brain.screen.draw_rectangle(78, 42, 40, 25)
+        brain.screen.set_fill_color(Color.GREEN)
+        brain.screen.draw_rectangle(60, 28, 40, 25)
+        brain.screen.set_fill_color(Color.BLUE)
+        brain.screen.draw_rectangle(42, 42, 40, 25)
+        brain.screen.set_fill_color(Color.RED)
+        brain.screen.draw_rectangle(60, 56, 40, 25)
+        for i in range(5):
+            brain.screen.draw_line(18+i, 85, 18+i, 95)
+            brain.screen.draw_line(14, 88+i, 26, 88+i)
+            brain.screen.draw_line(10, 75+i, 20, 75+i)
+            brain.screen.draw_line(16+i, 75, 16+i, 66)
+            brain.screen.draw_line(10, 66+i, 30, 66+i)
+
+            brain.screen.draw_line(159-18-i, 107-85, 159-18-i, 107-95)
+            brain.screen.draw_line(159-14, 107-88-i, 159-26, 107-88-i)
+            brain.screen.draw_line(159-10, 107-75-i, 159-20, 107-75-i)
+            brain.screen.draw_line(159-16-i, 107-75, 159-16-i, 107-66)
+            brain.screen.draw_line(159-10, 107-66-i, 159-30, 107-66-i)
+    else:
+        brain.screen.set_fill_color(Color.RED)
+        brain.screen.set_pen_color(Color.RED)
+        for i in range(40):
+            brain.screen.draw_circle(60+i, 42+(i/2), 30)
+        brain.screen.set_pen_color(Color.YELLOW)
+        for i in range(5):
+            brain.screen.draw_line(75, 50+i-5, 85, 50+i-5)
+            brain.screen.draw_line(75, 50+i+5, 85, 50+i+5)
+            brain.screen.draw_line(75, 50+i+5, 85, 50+i-5)
+
+            brain.screen.draw_line(75, 50+i-15, 85, 50+i-15)
+            brain.screen.draw_line(75+(i/2), 50-15, 75+(i/2), 50-25)
+            brain.screen.draw_line(83+(i/2), 50-15, 83+(i/2), 50-25)
+            brain.screen.draw_line(75, 50+i-25, 85, 50+i-25)
+
+            brain.screen.draw_line(75, 50+i+15, 85, 50+i+15)
+            brain.screen.draw_line(83+(i/2), 50+15, 83+(i/2), 50+25)
+            brain.screen.draw_line(75, 50+i+25, 85, 50+i+25)
+    brain.screen.set_fill_color(Color.TRANSPARENT)
+
+# Register the callback functions to the events 
+FWD(motor1_move_forward)
+FWD(motor5_move_forward)
+RT(motor1_turn_right)
+RT(motor5_turn_right)
+LT(motor_1_turn_left)
+LT(motor5_turn_left)
+wait(15, MSEC)
+
+# Start the program!
+from vex import *
+import random
+
+# Initialize the VEX EXP Brain
+brain = Brain()
+
+# --- VEX Event Setup for Movement ---
+FWD = Event()
+RT = Event()
+LT = Event()
+
+# Underlying physical motor actions triggered by the events
+def _drive_forward():
+    brain.screen.clear_screen()
+    brain.screen.set_cursor(1, 1)
+    brain.screen.print("Driving Forward...")
+    wait(1000, MSEC)
+
+def _turn_right():
+    brain.screen.clear_screen()
+    brain.screen.set_cursor(1, 1)
+    brain.screen.print("Turning Right 90deg")
+    wait(500, MSEC)
+
+def _turn_left():
+    brain.screen.clear_screen()
+    brain.screen.set_cursor(1, 1)
+    brain.screen.print("Turning Left 90deg")
+    wait(500, MSEC)
+
+# Register the target functions to the events
+FWD(_drive_forward)
+RT(_turn_right)
+LT(_turn_left)
+
+# --- Display Function ---
+def display_screen(line1, line2=""):
+    """Displays text on the brain screen using concatenation and proper positioning."""
+    brain.screen.clear_screen()
+    brain.screen.set_cursor(1, 1)
+    brain.screen.print(line1[:16])
+    if line2 != "":
+        brain.screen.set_cursor(2, 1)
+        brain.screen.print(line2[:16])
+
+def display_card_backs(count):
+    """Shows the UNO card back multiple times when drawing multiple cards."""
+    for i in range(count):
+        brain.screen.clear_screen()
+        brain.screen.set_cursor(1, 1)
+        brain.screen.print("Drawing Card " + str(i + 1) + "/" + str(count))
+        brain.screen.set_cursor(3, 1)
+        brain.screen.print("[UNO CARD BACK]")
+        wait(500, MSEC)
+
+def robot_trip_action(action_name):
+    """
+    Drives robot to the center using event broadcasts, performs 
+    the card action, and drives back to the player. Hides hand for privacy.
+    """
+    # Hide player's hand while driving
+    display_screen("PRIVACY MODE", "Robot Moving...")
+    
+    # 1. Drive to center (2 forward movements)
+    FWD.broadcast_and_wait()
+    FWD.broadcast_and_wait()
+    
+    # 2. Perform action at center (Draw / Discard)
+    display_screen("Action: " + action_name)
+    wait(1000, MSEC)
+    
+    # 3. Turn around (180 degrees via two right turns)
+    RT.broadcast_and_wait()
+    RT.broadcast_and_wait()
+    
+    # 4. Drive back to player (2 forward movements)
+    FWD.broadcast_and_wait()
+    FWD.broadcast_and_wait()
+    
+    # 5. Turn back to starting orientation
+    RT.broadcast_and_wait()
+    RT.broadcast_and_wait()
+
+def create_uno_deck():
+    """Generates a standard 108-card UNO deck using dictionaries."""
+    colors = ['Red', 'Yellow', 'Green', 'Blue']
+    deck = []
+    
+    # 1. Number cards (0-9)
+    for color in colors:
+        deck.append({'color': color, 'type': 'number', 'value': 0})
+        for value in range(1, 10):
+            deck.append({'color': color, 'type': 'number', 'value': value})
+            deck.append({'color': color, 'type': 'number', 'value': value})
+            
+    # 2. Action cards (Skip, Reverse, Draw Two)
+    action_types = ['Skip', 'Reverse', 'Draw Two']
+    for color in colors:
+        for action in action_types:
+            deck.append({'color': color, 'type': 'action', 'value': action})
+            deck.append({'color': color, 'type': 'action', 'value': action})
+            
+    # 3. Wild cards (Wild, Wild Draw Four)
+    for _ in range(4):
+        deck.append({'color': 'Wild', 'type': 'wild', 'value': 'Wild'})
+        deck.append({'color': 'Wild', 'type': 'wild', 'value': 'Wild Draw Four'})
+        
+    return deck
+
+def shuffle_deck(deck):
+    """Shuffles the deck in place using the Fisher-Yates algorithm."""
+    n = len(deck)
+    for i in range(n - 1, 0, -1):
+        j = random.randint(0, i)
+        deck[i], deck[j] = deck[j], deck[i]
+    return deck
+
+def draw_card(deck):
+    """Removes and returns the top card from the deck."""
+    if len(deck) > 0:
+        return deck.pop(0)
+    else:
+        return None
+
+def start_game(deck):
+    """Deals a starting hand of 7 cards from the deck."""
+    hand = []
+    for _ in range(7):
+        card = draw_card(deck)
+        if card:
+            hand.append(card)
+    return hand
+
+def display_discard_menu(deck):
+    """Menu to set up and show the top card of the discard pile (Fits 5x16 screen)."""
+    top_card = draw_card(deck)
+    
+    # Robot goes to center to establish discard pile
+    robot_trip_action("Set Discard")
+    
+    brain.screen.clear_screen()
+    brain.screen.set_cursor(1, 1)
+    brain.screen.print("Discard Pile:")
+    
+    brain.screen.set_cursor(2, 1)
+    if top_card:
+        card_str = top_card['color'] + " " + str(top_card['value'])
+        brain.screen.print(card_str[:16])
+    else:
+        brain.screen.print("Deck Empty!")
+    
+    brain.screen.set_cursor(4, 1)
+    brain.screen.print("Press CHECK to")
+    brain.screen.set_cursor(5, 1)
+    brain.screen.print("start game...")
+    
+    while not brain.buttonCheck.pressing():
+        wait(20, MSEC)
+    while brain.buttonCheck.pressing():
+        wait(20, MSEC)
+        
+    return top_card
+
+def configure_wild_card():
+    """Allows player to choose color, value, and draw count for a Wild card using Left/Right/Check."""
+    colors = ['Red', 'Yellow', 'Green', 'Blue']
+    color_idx = 0
+    
+    while True:
+        display_screen("Wild: Color", "> " + colors[color_idx])
+        brain.screen.set_cursor(5, 1)
+        brain.screen.print("L/R:Cycle C:Select")
+        
+        if brain.buttonLeft.pressing():
+            color_idx = (color_idx - 1) % len(colors)
+            wait(200, MSEC)
+        elif brain.buttonRight.pressing():
+            color_idx = (color_idx + 1) % len(colors)
+            wait(200, MSEC)
+        elif brain.buttonCheck.pressing():
+            while brain.buttonCheck.pressing():
+                wait(20, MSEC)
+            chosen_color = colors[color_idx]
+            break
+        wait(50, MSEC)
+        
+    values = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Skip', 'Reverse', 'Draw Two']
+    val_idx = 0
+    while True:
+        display_screen("Wild: Value", "> " + values[val_idx])
+        brain.screen.set_cursor(5, 1)
+        brain.screen.print("L/R:Cycle C:Select")
+        
+        if brain.buttonLeft.pressing():
+            val_idx = (val_idx - 1) % len(values)
+            wait(200, MSEC)
+        elif brain.buttonRight.pressing():
+            val_idx = (val_idx + 1) % len(values)
+            wait(200, MSEC)
+        elif brain.buttonCheck.pressing():
+            while brain.buttonCheck.pressing():
+                wait(20, MSEC)
+            chosen_value = values[val_idx]
+            break
+        wait(50, MSEC)
+        
+    draw_counts = [0, 2, 4, 6]
+    draw_idx = 0
+    while True:
+        display_screen("Wild: Draw Count", "> Draw " + str(draw_counts[draw_idx]) + " cards")
+        brain.screen.set_cursor(5, 1)
+        brain.screen.print("L/R:Cycle C:Select")
+        
+        if brain.buttonLeft.pressing():
+            draw_idx = (draw_idx - 1) % len(draw_counts)
+            wait(200, MSEC)
+        elif brain.buttonRight.pressing():
+            draw_idx = (draw_idx + 1) % len(draw_counts)
+            wait(200, MSEC)
+        elif brain.buttonCheck.pressing():
+            while brain.buttonCheck.pressing():
+                wait(20, MSEC)
+            chosen_draw_count = draw_counts[draw_idx]
+            break
+        wait(50, MSEC)
+        
+    return chosen_color, chosen_value, chosen_draw_count
+
+def get_legal_cards(player_hand, top_card):
+    """Checks which cards from the player's hand are legal to play."""
+    legal_indices = []
+    for i, card in enumerate(player_hand):
+        if (card['color'] == 'Wild' or 
+            card['color'] == top_card['color'] or 
+            str(card['value']) == str(top_card['value'])):
+            legal_indices.append(i)
+    return legal_indices
+
+def choose_legal_card_or_draw(player_hand, legal_indices, top_card):
+    """Allows player to choose a legal card or draw using buttons."""
+    selection_idx = 0
+    max_idx = len(legal_indices)  
+    
+    while True:
+        brain.screen.clear_screen()
+        brain.screen.set_cursor(1, 1)
+        
+        if not legal_indices:
+            brain.screen.print("No Legal Cards!")
+            brain.screen.set_cursor(2, 1)
+            brain.screen.print("Must Draw Card")
+            brain.screen.set_cursor(5, 1)
+            brain.screen.print("CHECK: Confirm")
+            
+            while not brain.buttonCheck.pressing():
+                wait(20, MSEC)
+            while brain.buttonCheck.pressing():
+                wait(20, MSEC)
+            return -1
+            
+        if selection_idx < len(legal_indices):
+            hand_idx = legal_indices[selection_idx]
+            card = player_hand[hand_idx]
+            brain.screen.print("Legal (" + str(selection_idx + 1) + "/" + str(len(legal_indices)) + ")")
+            brain.screen.set_cursor(2, 1)
+            brain.screen.print((card['color'] + " " + str(card['value']))[:16])
+            brain.screen.set_cursor(4, 1)
+            brain.screen.print("L/R: Scroll")
+            brain.screen.set_cursor(5, 1)
+            brain.screen.print("CHECK: Play Card")
+        else:
+            brain.screen.print("Action Option:")
+            brain.screen.set_cursor(2, 1)
+            brain.screen.print("> Draw Card")
+            brain.screen.set_cursor(4, 1)
+            brain.screen.print("L/R: Scroll")
+            brain.screen.set_cursor(5, 1)
+            brain.screen.print("CHECK: Draw Card")
+            
+        if brain.buttonLeft.pressing():
+            selection_idx = (selection_idx - 1) % (max_idx + 1)
+            wait(200, MSEC)
+        elif brain.buttonRight.pressing():
+            selection_idx = (selection_idx + 1) % (max_idx + 1)
+            wait(200, MSEC)
+        elif brain.buttonCheck.pressing():
+            while brain.buttonCheck.pressing():
+                wait(20, MSEC)
+            
+            if selection_idx == len(legal_indices):
+                return -1  
+            else:
+                return legal_indices[selection_idx]  
+                
+        wait(50, MSEC)
+
+# --- Main Program Execution ---
+display_screen("Setting up UNO...")
+
+uno_deck = create_uno_deck()
+shuffle_deck(uno_deck)
+player_hand = start_game(uno_deck)
+current_top_card = display_discard_menu(uno_deck)
+
+pending_draw_penalty = 0
+if current_top_card['value'] == 'Draw Two':
+    pending_draw_penalty = 2
+elif current_top_card['value'] == 'Wild Draw Four':
+    pending_draw_penalty = 4
+
+# --- Main Game Loop ---
+while True:
+    brain.screen.clear_screen()
